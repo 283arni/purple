@@ -14,7 +14,7 @@ const validateDivide = (command, num) => {
 }
 
 const validateNum = (num) => {
-    return  typeof num === 'number';
+    return  Number.isFinite(num);
 }
 
 export { validateDivide, validateСommand, validateNum }
