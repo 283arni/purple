@@ -1,21 +1,27 @@
-import add from "./add.mjs";
-import divide from "./divide.mjs";
-import multiply from "./multiply.mjs";
-import subtract from "./subtract.mjs";
+import { divide, multiply, add, subtract } from "./utils.mjs";
+import { validateDivide, validateСommand, validateNum } from "./validate.mjs";
 
-switch (process.argv[4]) {
-    case 'add':
-        add(+process.argv[2], +process.argv[3]);
-        break;
-    case 'divide':
-        divide(+process.argv[2], +process.argv[3]);
-        break;
+const command = process.argv[2];
+const firstNum =  +process.argv[3];
+const secondNum = +process.argv[4];
 
-    case 'multiply':
-        multiply(+process.argv[2], +process.argv[3]);
-        break;
-
-    case 'subtract':
-        subtract(+process.argv[2], +process.argv[3]);
-        break;
+if(validateСommand(command) && validateNum(firstNum) && validateNum(secondNum) && validateDivide(command, secondNum)) {
+    switch (command) {
+        case 'add':
+            add(firstNum, secondNum);
+            break;
+        case 'divide':
+            divide(firstNum, secondNum);
+            break;
+    
+        case 'multiply':
+            multiply(firstNum, secondNum);
+            break;
+    
+        case 'subtract':
+            subtract(firstNum, secondNum);
+            break;
+    }
 }
+
+

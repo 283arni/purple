@@ -1,6 +1,9 @@
 const EventEmitter = require('events');
+const validateTime = require('./validate.js');
 
 const events = new EventEmitter();
+
+const time = process.argv.slice(2);
 
 const initTimer = (time) => {
     const hours = parseFloat(time[0]) * 3600000 || 0;
@@ -15,4 +18,8 @@ const initTimer = (time) => {
 }
 
 events.on('initTimer', initTimer);
-events.emit('initTimer', process.argv.slice(2))
+
+if(validateTime(time)) {
+    events.emit('initTimer', time)
+}
+
