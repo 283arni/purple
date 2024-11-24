@@ -1,4 +1,5 @@
 const { performance, PerformanceObserver } = require('perf_hooks');
+const os = require('node:os');
 const { Worker } = require('worker_threads');
 const { numsLength, numsArrays }  = require('./nums.js');
 
@@ -23,7 +24,7 @@ const numsLengthSimple = () =>  {
 }
 
 const compute = (arr) => {
-    return new Promise((resolve, rejects) => {
+    return new Promise((resolve, reject) => {
 
         const worker = new Worker('./worker', {
             workerData: { arr }
@@ -34,30 +35,24 @@ const compute = (arr) => {
         });
 
         worker.on('error', (e) => {
-            rejects(e);
+            reject(e);
         });
     })
 }
 
-const numsLengthMulty = async () =>  {
+const numsLengthMulty = async () => {
     performance.mark('multy start');
 
-    const numsArr = numsArrays(50000);
+    const numCPUs = os.cpus().length;
+    const numsArr = numsArrays(Math.ceil(300000 / numCPUs));
 
-    const res = await Promise.all([
-        compute(numsArr[0]),
-        compute(numsArr[1]),
-        compute(numsArr[2]),
-        compute(numsArr[3]),
-        compute(numsArr[4]),
-        compute(numsArr[5]),
-    ]);
+    const res = await Promise.all(numsArr.map((chunk) => compute(chunk)));
 
     performance.mark('multy end');
     performance.measure('multy', 'multy start', 'multy end');
 
-    console.log(`Без остатка на 3 делятся: ${res.reduce(( acc, num) => acc + num, 0)}`);
-}
+    console.log(`Без остатка на 3 делятся (multy): ${res.reduce((acc, num) => acc + num, 0)}`);
+};
 
 const main = () => {
     numsLengthSimple();
