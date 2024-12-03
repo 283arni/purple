@@ -1,5 +1,5 @@
 import { homedir } from 'os';
-import { join } from 'path';
+import path, { join } from 'path';
 import { promises } from 'fs';
 
 
@@ -12,7 +12,7 @@ const pathData = join(homedir(), 'w-data.json');
 
 const saveData = async ( key, value) => {
     let data = {}
-
+    
     if( await isExist(pathData)) {
         const file = await promises.readFile(pathData);
         data = JSON.parse(file)
@@ -27,7 +27,7 @@ const getData = async (key) => {
     if( await isExist(pathData)) {
         const file = await promises.readFile(pathData);
         const data = JSON.parse(file);
-
+        
         return data[key]
     }
 

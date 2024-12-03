@@ -34,13 +34,13 @@ const fetchData = async (town, token, lang) => {
 			}
 		}) 
 
-		return data
+		return data;
 	}
 
-const fetchWeather = async (cities) => {
-    const token = process.env.TOKEN ?? await getData(TOKEN_DICTIONARY.token);
-    const townsStr = cities ?? await getData(TOKEN_DICTIONARY.city);
-	const lang = process.env.LANG ?? await getData(TOKEN_DICTIONARY.lang);
+const fetchWeather = async () => {
+    const token = await getData(TOKEN_DICTIONARY.token);
+    const townsStr = await getData(TOKEN_DICTIONARY.city);
+	const lang = await getData(TOKEN_DICTIONARY.lang) || 'ru';
 	
     if(!token) {
         throw new Error('Не указан ключ, указать можно с помощью -t [KEY]')

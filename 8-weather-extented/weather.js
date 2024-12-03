@@ -27,7 +27,7 @@ const saveLang = async (lang) => {
 
     try {
         await saveData(TOKEN_DICTIONARY.lang, lang);
-        printSuccess('Languege saved')
+        printSuccess('Language saved')
         
     } catch (error) {
         console.log(printError(error))
@@ -51,7 +51,7 @@ const saveCity = async (city) => {
 
 const weatherOutside = async () => {
     try {
-        const weather = await fetchWeather(process.env.CITY);
+        const weather = await fetchWeather();
         weather.forEach((weatherCity) => printWeather(weatherCity));
         
     } catch (error) {
@@ -65,26 +65,26 @@ const weatherOutside = async () => {
     }
 }
 
-const initCLI = () => {
+const initCLI = async () => {
     const argv = getArgs(process.argv);
     
     if(argv.h) {
-        printHelp();
+       return printHelp();
     }
 
     if(argv.s) {
-        saveCity(argv.s);
+        await saveCity(argv.s);
     }
 
     if(argv.t) {
-        saveToken(argv.t);
+        await saveToken(argv.t);
     }
 
     if(argv.l) {
-        saveLang(argv.l);
+        await saveLang(argv.l);
     }
 
-    weatherOutside();
+    await weatherOutside();
 }
 
 initCLI();
