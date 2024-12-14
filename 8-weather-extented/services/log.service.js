@@ -32,6 +32,7 @@ const printWeather = async (weather) => {
             `
         );
     }
+
 }
 
 const printHelp = () => {

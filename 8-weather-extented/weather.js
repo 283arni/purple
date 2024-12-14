@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import { getArgs } from "./helpers/args.js"; 
-import { fetchWeather } from "./services/api.service.js";
+import { fetchServer } from "./services/api.service.js";
 import { printHelp, printSuccess, printError, printWeather } from "./services/log.service.js";
 import { saveData, TOKEN_DICTIONARY } from "./services/storage.service.js";
+
 
 const saveToken = async (token) => {
     if(!token.length) {
@@ -51,9 +52,8 @@ const saveCity = async (city) => {
 
 const weatherOutside = async () => {
     try {
-        const weather = await fetchWeather();
+        const weather = await fetchServer();
         weather.forEach((weatherCity) => printWeather(weatherCity));
-        
     } catch (error) {
         if(error?.responce?.code == 404) {
             printError('Неверно указан город')

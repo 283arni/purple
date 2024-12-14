@@ -1,5 +1,20 @@
 import { getData, TOKEN_DICTIONARY } from "./storage.service.js";
 import axios from 'axios';
+import express from 'express';
+
+const app = express();
+
+const port = 8000;
+
+app.listen(port, () => {
+    console.log(`Сервер: http://localhost:${port}`);
+});
+
+app.get('/weather', async (req, res) => {
+	const data = await fetchWeather();
+	
+	res.send(data);
+})
 
 const getIcon = (icon) => {
 	switch (icon.slice(0, -1)) {
@@ -24,6 +39,13 @@ const getIcon = (icon) => {
 	}
 };
 
+
+const fetchServer = async () => {
+	const {data} = await axios.get(`http://localhost:${port}/weather`);
+
+	return data;
+}
+
 const fetchData = async (town, token, lang) => {
 		const {data} = await axios.get('https://api.openweathermap.org/data/2.5/weather',{
 			params: {
@@ -34,8 +56,8 @@ const fetchData = async (town, token, lang) => {
 			}
 		}) 
 
-		return data;
-	}
+	return data;
+}
 
 const fetchWeather = async () => {
     const token = await getData(TOKEN_DICTIONARY.token);
@@ -48,10 +70,10 @@ const fetchWeather = async () => {
 
 	const towns = await townsStr.split(',')
 
-	const data = await Promise.all(towns.map((town) =>  fetchData(town, token, lang)))
 
+	const data = await Promise.all(towns.map((town) =>  fetchData(town, token, lang)))
 
     return data;
 }
 
-export {fetchWeather, getIcon}
+export {fetchWeather, getIcon, fetchServer}
