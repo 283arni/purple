@@ -74,11 +74,11 @@ func scanInput() (float64, float64, float64) {
 func calculate(numSum float64, a float64, b float64) (float64, error) {
 
 	if numSum <= 0 {
-		return 0, errors.New("Сумма денег должна быть больше 0. Попробуйте заного.")
+		return 0, errors.New("Сумма денег должна быть больше 0. Попробуйте заново.")
 	}
 
 	if a <= 0 || b <= 0 {
-		return 0, errors.New("Валюта не может быть меньше или равняться 0. Проверьте правельность курса")
+		return 0, errors.New("Валюта не может быть меньше или равняться 0. Проверьте правильность курса")
 	}
 
 	return numSum * a / b, nil
@@ -93,5 +93,5 @@ func main() {
 		return
 	}
 
-	fmt.Printf("%.2f", res)
+	fmt.Printf("Результат конвертации: %.2f", res)
 }
