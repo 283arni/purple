@@ -6,11 +6,7 @@ import (
 	"strconv"
 )
 
-const USD float64 = 87.50
-const EUR float64 = 92.20
-const RUB float64 = 1
-
-var money = map[string]float64{"USD": USD, "EUR": EUR, "RUB": RUB}
+var money = map[string]float64{"USD": 87.50, "EUR": 92.20, "RUB": 1}
 
 func scanInput() (float64, float64, float64) {
 	var firstM, secondM, sum string
