@@ -24,6 +24,7 @@ func scanInput() (float64, string, string) {
 		}
 
 		break
+
 	}
 
 	for {
@@ -38,6 +39,7 @@ func scanInput() (float64, string, string) {
 		}
 
 		break
+
 	}
 
 	for {
