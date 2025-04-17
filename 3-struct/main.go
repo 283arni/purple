@@ -25,20 +25,68 @@ func switchMenu(item int) {
 
 	switch item {
 	case 1:
-		bins.AddAccount()
+		AddAccount(bins)
 	case 2:
-		bins.ReadBins()
+		ShowBins(bins)
 	case 3:
-		file.ReadFile()
+		ReadFile()
 	case 4:
-		file.CheckFile()
+		CheckFile()
 	default:
 		return
 	}
 }
 
+func AddAccount(bins *bins.Bins) {
+	var private, name string
+	var isPrivate bool
+	fmt.Println("Будет ли bin приватный Y/n?")
+	fmt.Scan(&private)
+	fmt.Println("Введите имя:")
+	fmt.Scan(&name)
+
+	if private == "Y" || private == "y" {
+		isPrivate = true
+	} else {
+		isPrivate = false
+	}
+
+	bins.AddAccount(name, isPrivate)
+}
+
+func ShowBins(bins *bins.Bins) {
+	binsList := bins.ReadBins()
+
+	for _, v := range binsList {
+		fmt.Println(v.Name)
+		fmt.Println(v.CreateAt)
+	}
+}
+
+func ReadFile() {
+	var name string
+	fmt.Println("Введите путь до файла:")
+	fmt.Scan(&name)
+
+	err := file.ReadFile(name)
+
+	if err != nil {
+		fmt.Println("Прочтение файла не удалось")
+		return
+	}
+
+	fmt.Println("Файл упешно прочитан")
+}
+
+func CheckFile() {
+	var name string
+	fmt.Println("Введите путь до файла (Проверка файла на json):")
+	fmt.Scan(&name)
+
+	file.CheckFile(name)
+}
+
 func main() {
 	item := menu()
 	switchMenu(item)
-
 }

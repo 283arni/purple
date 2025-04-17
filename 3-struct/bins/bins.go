@@ -3,8 +3,7 @@ package bins
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
-	"strconv"
+	"github.com/google/uuid"
 	"struct/storage"
 	"time"
 )
@@ -21,22 +20,10 @@ type Bins struct {
 	UpdateAt time.Time `json:"updateAt"`
 }
 
-func CreateBin() *Bin {
-	var private, name string
-	var isPrivate bool
-	fmt.Println("Будет ли bin приватный Y/n?")
-	fmt.Scan(&private)
-	fmt.Println("Введите имя:")
-	fmt.Scan(&name)
-
-	if private == "Y" || private == "y" {
-		isPrivate = true
-	} else {
-		isPrivate = false
-	}
+func CreateBin(name string, isPrivate bool) *Bin {
 
 	return &Bin{
-		Id:       name + strconv.Itoa(rand.Intn(100)),
+		Id:       uuid.New().String(),
 		Private:  isPrivate,
 		CreateAt: time.Now(),
 		Name:     name,
@@ -68,11 +55,15 @@ func NewBins() *Bins {
 	return &bins
 }
 
-func (bins *Bins) AddAccount() {
-	bin := CreateBin()
+func (bins *Bins) AddAccount(name string, isPrivate bool) {
+	bin := CreateBin(name, isPrivate)
 
 	bins.BinsArr = append(bins.BinsArr, *bin)
-	bins.save()
+	err := bins.save()
+
+	if err != nil {
+		fmt.Println("Проблема сохранения файла")
+	}
 }
 
 func (bins *Bins) ToBytes() ([]byte, error) {
@@ -85,7 +76,7 @@ func (bins *Bins) ToBytes() ([]byte, error) {
 	return file, nil
 }
 
-func (bins *Bins) ReadBins() {
+func (bins *Bins) ReadBins() []Bin {
 	data, err := storage.ReadFile("storage/data.json")
 
 	if err != nil {
@@ -100,20 +91,18 @@ func (bins *Bins) ReadBins() {
 		fmt.Println(err)
 	}
 
-	for _, v := range b.BinsArr {
-		fmt.Println(v.Name)
-		fmt.Println(v.CreateAt)
-	}
+	return b.BinsArr
 
 }
 
-func (bins *Bins) save() {
+func (bins *Bins) save() error {
 	bins.UpdateAt = time.Now()
 	data, err := bins.ToBytes()
 
 	if err != nil {
-		fmt.Println("Не удалось приобразовать данные")
+		return err
 	}
 
 	storage.WriteFile(data, "storage/data.json")
+	return nil
 }
