@@ -20,11 +20,13 @@ func WriteFile(content []byte, name string) {
 
 	if err != nil {
 		fmt.Println("Не удалось создать файл")
+		return
 	}
 
 	_, err = file.Write(content)
 	if err != nil {
 		fmt.Println("Не удалось записать файл")
+		return
 	}
 
 	fmt.Println("Успех !")

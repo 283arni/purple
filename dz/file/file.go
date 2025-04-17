@@ -1,34 +1,33 @@
 package file
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
-	"path/filepath"
 )
 
-func ReadFile() {
-	var name string
-	fmt.Println("Введите путь до файла:")
-	fmt.Scan(&name)
-
+func ReadFile(name string) error {
 	_, err := os.ReadFile(name)
 
 	if err != nil {
-		fmt.Println(err)
+		return err
+	}
+
+	return nil
+}
+
+func CheckFile(path string) {
+	data, err := os.ReadFile(path)
+
+	if err != nil {
+		fmt.Println("Не получилось почитать файл")
 		return
 	}
 
-	fmt.Println("Файл прочтен!")
-}
+	var d any
+	err = json.Unmarshal(data, &d)
 
-func CheckFile() {
-	var name string
-	fmt.Println("Введите путь до файла (Проверка файла на json):")
-	fmt.Scan(&name)
-
-	fileExtension := filepath.Ext(name)
-
-	if fileExtension != ".json" {
+	if err != nil {
 		fmt.Println("Это не json или неверный путь")
 		return
 	}
