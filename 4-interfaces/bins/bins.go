@@ -10,7 +10,6 @@ import (
 )
 
 type BinsInterface interface {
-	NewBins() *Bins
 	AddAccount(name string, isPrivate bool)
 	ToBytes() ([]byte, error)
 	ReadBins() []Bin
@@ -39,7 +38,7 @@ func CreateBin(name string, isPrivate bool) *Bin {
 	}
 }
 
-func (b *Bins) NewBins() *Bins {
+func NewBins() *Bins {
 	data, err := storage.ReadFile("storage/data.json")
 
 	if err != nil {

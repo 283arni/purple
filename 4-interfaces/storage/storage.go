@@ -16,8 +16,6 @@ func ReadFile(name string) ([]byte, error) {
 func WriteFile(content []byte, name string) {
 	file, err := os.Create(name)
 
-	defer file.Close()
-
 	if err != nil {
 		fmt.Println("Не удалось создать файл")
 		return
@@ -30,4 +28,5 @@ func WriteFile(content []byte, name string) {
 	}
 
 	fmt.Println("Успех !")
+	defer file.Close()
 }
