@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"struct/api"
 	"struct/bins"
 	"struct/file"
 )
