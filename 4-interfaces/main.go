@@ -23,7 +23,7 @@ func menu() int {
 func switchMenu(item int) {
 	fileHandler := &file.File{}
 	binsHandler := &bins.Bins{}
-	bins := binsHandler.NewBins()
+	bins := bins.NewBins()
 
 	switch item {
 	case 1:
@@ -53,7 +53,7 @@ func AddAccount(binsHandler bins.BinsInterface, bins *bins.Bins) {
 		isPrivate = false
 	}
 
-	bins.AddAccount(name, isPrivate)
+	binsHandler.AddAccount(name, isPrivate)
 }
 
 func ShowBins(binsHandler bins.BinsInterface, bins *bins.Bins) {

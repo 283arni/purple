@@ -27,7 +27,7 @@ func (f *File) CheckFile(path string) {
 	data, err := os.ReadFile(path)
 
 	if err != nil {
-		fmt.Println("Не получилось почитать файл")
+		fmt.Println(err)
 		return
 	}
 
@@ -35,7 +35,7 @@ func (f *File) CheckFile(path string) {
 	err = json.Unmarshal(data, &d)
 
 	if err != nil {
-		fmt.Println("Это не json или неверный путь")
+		fmt.Println(err)
 		return
 	}
 
