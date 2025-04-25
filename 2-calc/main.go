@@ -9,6 +9,12 @@ import (
 	"strings"
 )
 
+var calcMap = map[string]func([]float64) float64{
+	"AMG": addAverage,
+	"SUM": add,
+	"MED": addMedian,
+}
+
 func scanInput() (string, string) {
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Print("Введите название операции: \n 'AMG' - вычисление среднего значения \n 'SUM' - общая сумма \n 'MED' - найти медиану \n")
@@ -73,20 +79,15 @@ func addMedian(nums []float64) float64 {
 
 func calculate(command string, nums []float64) (float64, error) {
 
-	switch command {
-	case "AMG":
-		sum := addAverage(nums)
-		return sum, nil
-	case "SUM":
-		sum := add(nums)
-		return sum, nil
-	case "MED":
-		sum := addMedian(nums)
-		return sum, nil
-	default:
+	funcSum, ok := calcMap[command]
+
+	if !ok {
 		return 0, errors.New("Такой команды нет, выберите из списка")
 	}
 
+	sum := funcSum(nums)
+
+	return sum, nil
 }
 
 func main() {
