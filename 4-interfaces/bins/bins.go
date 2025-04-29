@@ -5,22 +5,29 @@ import (
 	"fmt"
 	"struct/storage"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type BinsInterface interface {
-	AddAccount(name string, isPrivate bool)
+	AddAccount(name string, file string)
+	UpdateBin(id string)
 	ToBytes() ([]byte, error)
 	ReadBins() []Bin
 	save() error
 }
 
+type Metadata struct {
+	Id        string    `json:"id"`
+	CreatedAt time.Time `json:"createdAt"`
+	Private   bool      `json:"private"`
+}
+
+type Record struct {
+	Name string `json:"name"`
+}
+
 type Bin struct {
-	Id       string    `json:"id"`
-	Private  bool      `json:"private"`
-	CreateAt time.Time `json:"createAt"`
-	Name     string    `json:"name"`
+	Record   Record   `json:"record"`
+	Metadata Metadata `json:"metadata"`
 }
 
 type Bins struct {
@@ -28,13 +35,19 @@ type Bins struct {
 	UpdateAt time.Time `json:"updateAt"`
 }
 
-func CreateBin(name string, isPrivate bool) *Bin {
+func CreateBin(binRes string) *Bin {
+	var bin Bin
+	json.Unmarshal([]byte(binRes), &bin)
 
 	return &Bin{
-		Id:       uuid.New().String(),
-		Private:  isPrivate,
-		CreateAt: time.Now(),
-		Name:     name,
+		Record: Record{
+			Name: bin.Record.Name,
+		},
+		Metadata: Metadata{
+			Id:        bin.Metadata.Id,
+			CreatedAt: bin.Metadata.CreatedAt,
+			Private:   bin.Metadata.Private,
+		},
 	}
 }
 
@@ -63,15 +76,20 @@ func NewBins() *Bins {
 	return &bins
 }
 
-func (bins *Bins) AddAccount(name string, isPrivate bool) {
-	bin := CreateBin(name, isPrivate)
+func (bins *Bins) AddAccount(binRes string, file string) {
+	bin := CreateBin(binRes)
 
-	bins.BinsArr = append(bins.BinsArr, *bin)
+	bArr := bins.ReadBins()
+	bins.BinsArr = append(bArr, *bin)
 	err := bins.save()
 
 	if err != nil {
 		fmt.Println("Проблема сохранения файла")
 	}
+}
+
+func (bins *Bins) UpdateBin(id string) {
+
 }
 
 func (bins *Bins) ToBytes() ([]byte, error) {

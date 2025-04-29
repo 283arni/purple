@@ -1,1 +1,21 @@
-{"bins":[{"id":"","private":false,"createAt":"0001-01-01T00:00:00Z","name":""},{"id":"","private":false,"createAt":"0001-01-01T00:00:00Z","name":""},{"id":"Sancho28","private":true,"createAt":"2025-04-16T12:01:56.2268265+03:00","name":"Sancho"},{"id":"1b7ce893-201e-4b99-a16c-24ff47f35108","private":true,"createAt":"2025-04-24T15:07:08.1063046+03:00","name":"asd"}],"updateAt":"2025-04-24T15:07:08.1063046+03:00"}
+{
+  "bins": [
+    {
+      "record": { "name": "gobr" },
+      "metadata": {
+        "id": "6810a3ba8a456b796693c0e0",
+        "createdAt": "2025-04-29T10:02:34.787Z",
+        "private": true
+      }
+    },
+    {
+      "record": { "name": "fobr" },
+      "metadata": {
+        "id": "6810a4318561e97a5009f07c",
+        "createdAt": "2025-04-29T10:04:33.191Z",
+        "private": true
+      }
+    }
+  ],
+  "updateAt": "2025-04-29T13:04:31.5690209+03:00"
+}
