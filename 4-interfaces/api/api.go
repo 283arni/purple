@@ -49,10 +49,6 @@ func DeleteBin(id string) string {
 
 	baseUrl.Path = fmt.Sprintf("%s%s", baseUrl.Path, id)
 
-	if err != nil {
-		panic(err.Error())
-	}
-
 	req, err := http.NewRequest("DELETE", baseUrl.String(), nil)
 
 	req.Header.Set("Content-Type", "application/json")
