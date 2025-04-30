@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"struct/bins"
-	"time"
+	"net/url"
+	// "struct/bins"
+	// "time"
 )
 
 var key = "$2a$10$YXpconxx2hWndtNuufd1xuOwIMuAz/24MLVtybz5fhZRe5KtSaZX2"
@@ -40,13 +41,19 @@ func PostBin(name string) string {
 	return string(body)
 }
 
-func UpdateBin(bin bins.Bin) string {
+func DeleteBin(id string) string {
+	baseUrl, err := url.Parse("https://api.jsonbin.io/v3/b/")
+	if err != nil {
+		panic(err.Error())
+	}
 
-	bin.Metadata.CreatedAt = time.Now()
+	baseUrl.Path = fmt.Sprintf("%s%s", baseUrl.Path, id)
 
-	binJson, _ := json.Marshal(bin)
+	if err != nil {
+		panic(err.Error())
+	}
 
-	req, err := http.NewRequest("POST", "https://api.jsonbin.io/v3/b/", bytes.NewBuffer(binJson))
+	req, err := http.NewRequest("DELETE", baseUrl.String(), nil)
 
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("X-Master-Key", key)
@@ -65,6 +72,6 @@ func UpdateBin(bin bins.Bin) string {
 	body, _ := io.ReadAll(res.Body)
 
 	defer res.Body.Close()
-	fmt.Println(string(body))
+
 	return string(body)
 }

@@ -8,84 +8,30 @@ import (
 	"struct/file"
 )
 
-func menu() int {
-	var item int
-	binsHandler := &bins.Bins{}
-
-	fmt.Println("Выберите пункт меню:")
-	fmt.Println("1. Добавить bin")
-	fmt.Println("2. Просматреть bins")
-	fmt.Println("3. Чтение файла")
-	fmt.Println("4. Проверить на json")
-	create := flag.Bool("create", false, "Создать бин")
-	update := flag.Bool("update", false, "Обновить бин")
-	file := flag.String("file", "storage/data.json", "Файл")
-	id := flag.String("id", "", "ИД")
-	name := flag.String("name", "", "Название")
-	flag.Parse()
-
-	if *create {
-		AddAccount(binsHandler, *name, *file)
-	}
-
-	if *update {
-		UpdateBin(binsHandler, *id, *file)
-	}
-
-	// fmt.Scan(&item)
-
-	return item
-}
-
-func switchMenu(item int) {
-	fileHandler := &file.File{}
-	// binsHandler := &bins.Bins{}
-	// bins := bins.NewBins()
-
-	switch item {
-	case 1:
-		// AddAccount(binsHandler, *name, "sd" )
-	case 2:
-		// ShowBins(binsHandler, bins)
-	case 3:
-		ReadFile(fileHandler)
-	case 4:
-		CheckFile(fileHandler)
-	default:
-		return
-	}
-}
-
 func AddAccount(binsHandler bins.BinsInterface, name string, file string) {
 
 	binRes := api.PostBin(name)
 	binsHandler.AddAccount(binRes, file)
 }
 
-func UpdateBin(binsHandler bins.BinsInterface, id string, file string) {
+func DeleteAccount(binsHandler bins.BinsInterface, id string) {
 	if id == "" {
-		fmt.Println("добавьте флаг --id")
+		panic("Обязательно укажите id")
 	}
 
-	bArr := binsHandler.ReadBins()
-
-	var item bins.Bin
-	for _, v := range bArr {
-		if v.Metadata.Id == id {
-			item = v
-		}
-	}
-
-	api.UpdateBin(item)
+	binRes := api.DeleteBin(id)
+	binsHandler.DeleteBin(binRes)
 }
 
-func ShowBins(binsHandler bins.BinsInterface, bins *bins.Bins) {
-	// binsList := binsHandler.ReadBins()
+func ShowBins(binsHandler bins.BinsInterface) {
+	binsList := binsHandler.ReadBins()
 
-	// for _, v := range binsList {
-	// 	fmt.Println(v.Name)
-	// 	fmt.Println(v.CreateAt)
-	// }
+	for _, v := range binsList {
+		fmt.Println(v.Id)
+		fmt.Println(v.Name)
+		fmt.Println(v.CreatedAt)
+		fmt.Println(v.Private)
+	}
 }
 
 func ReadFile(fileHandler file.FileInterface) {
@@ -112,6 +58,25 @@ func CheckFile(fileHandler file.FileInterface) {
 }
 
 func main() {
-	item := menu()
-	switchMenu(item)
+	binsHandler := &bins.Bins{}
+
+	create := flag.Bool("create", false, "Создать бин")
+	delete := flag.Bool("delete", false, "Обновить бин")
+	list := flag.Bool("list", false, "Показать список")
+	file := flag.String("file", "storage/data.json", "Файл")
+	id := flag.String("id", "", "Индификатор")
+	name := flag.String("name", "Имя не указано", "Название")
+	flag.Parse()
+
+	if *create {
+		AddAccount(binsHandler, *name, *file)
+	}
+
+	if *delete {
+		DeleteAccount(binsHandler, *id)
+	}
+
+	if *list {
+		ShowBins(binsHandler)
+	}
 }

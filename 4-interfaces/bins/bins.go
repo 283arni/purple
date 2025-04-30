@@ -9,7 +9,7 @@ import (
 
 type BinsInterface interface {
 	AddAccount(name string, file string)
-	UpdateBin(id string)
+	DeleteBin(binRes string)
 	ToBytes() ([]byte, error)
 	ReadBins() []Bin
 	save() error
@@ -21,13 +21,30 @@ type Metadata struct {
 	Private   bool      `json:"private"`
 }
 
+type MetadataDelete struct {
+	Id              string `json:"id"`
+	VersionsDeleted int    `json:"versionsDeleted"`
+}
+
 type Record struct {
 	Name string `json:"name"`
 }
 
-type Bin struct {
+type Request struct {
 	Record   Record   `json:"record"`
 	Metadata Metadata `json:"metadata"`
+}
+
+type RequestDelete struct {
+	Metadata MetadataDelete `json:"metadata"`
+	Message  string         `json:"message"`
+}
+
+type Bin struct {
+	Id        string    `json:"id"`
+	Name      string    `json:"name"`
+	Private   bool      `json:"private"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 type Bins struct {
@@ -36,18 +53,14 @@ type Bins struct {
 }
 
 func CreateBin(binRes string) *Bin {
-	var bin Bin
+	var bin Request
 	json.Unmarshal([]byte(binRes), &bin)
 
 	return &Bin{
-		Record: Record{
-			Name: bin.Record.Name,
-		},
-		Metadata: Metadata{
-			Id:        bin.Metadata.Id,
-			CreatedAt: bin.Metadata.CreatedAt,
-			Private:   bin.Metadata.Private,
-		},
+		Id:        bin.Metadata.Id,
+		Name:      bin.Record.Name,
+		Private:   bin.Metadata.Private,
+		CreatedAt: bin.Metadata.CreatedAt,
 	}
 }
 
@@ -88,8 +101,29 @@ func (bins *Bins) AddAccount(binRes string, file string) {
 	}
 }
 
-func (bins *Bins) UpdateBin(id string) {
+func (bins *Bins) DeleteBin(binRes string) {
+	var bin RequestDelete
+	json.Unmarshal([]byte(binRes), &bin)
 
+	bArr := bins.ReadBins()
+	bCopy := []Bin{}
+
+	for _, v := range bArr {
+		if v.Id != bin.Metadata.Id {
+			bCopy = append(bCopy, v)
+		}
+	}
+
+	bins.BinsArr = bCopy
+
+	err := bins.save()
+
+	if err != nil {
+		fmt.Println("Проблема сохранения файла")
+		return
+	}
+
+	fmt.Println(bin.Message)
 }
 
 func (bins *Bins) ToBytes() ([]byte, error) {
